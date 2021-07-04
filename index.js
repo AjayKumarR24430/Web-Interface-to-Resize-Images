@@ -6,12 +6,14 @@ const lineDrawBtn = document.getElementById('linedraw-btn');
 const downloadBtn = document.getElementById('download-btn');
 const resizeBtn = document.getElementById('resize-btn');
 
+// function to convert the image to gray scale
 function convertImageToGray(img) {
     let dst = new cv.Mat();
     cv.cvtColor(img, dst, cv.COLOR_RGBA2GRAY, 0);
     return dst;
 }
 
+// function to convert the image to a line drawing
 function convertImageToLineDrawing(img) {
     const kernel = cv.getStructuringElement(cv.MORPH_RECT,new cv.Size(5,5));
 
@@ -29,6 +31,7 @@ function convertImageToLineDrawing(img) {
     return contour;
 }
 
+// to convert the uri to blob to make it downloadable as a png file
 function dataUriToBlob(dataUri) {
     const b64 = atob(dataUri.split(',')[1]);
     const u8 = Uint8Array.from(b64.split(''), e => e.charCodeAt());
@@ -36,38 +39,44 @@ function dataUriToBlob(dataUri) {
 }
 
 fileInput.addEventListener('change', e => {
-    srcImg.src = URL.createObjectURL(e.target.files[0]);
-    
+    // setting the src of the image from the Input file
+    srcImg.src = URL.createObjectURL(e.target.files[0]);    
 }, false);
 
+// onclicking gray scale button, conversion takes place convertImageToGray function is called
 grayScaleBtn.addEventListener('click', e => {
     let src = cv.imread(srcImg);
     const dst = convertImageToGray(src);
+    // display grayscale image
     cv.imshow('canvas', dst);
     src.delete();
     dst.delete();
 });
 
+// onclicking linedraw button, convertImageToLineDrawing function gets called.
 lineDrawBtn.addEventListener('click', e => {
     const src = cv.imread(srcImg);
     const dst = convertImageToLineDrawing(src);
+    // display line image
     cv.imshow('canvas', dst);
     src.delete();
     dst.delete();
-});
-
-downloadBtn.addEventListener('click', e => {
-    const data = canvas.toDataURL();
-    const url = URL.createObjectURL(dataUriToBlob(data));
-    downloadBtn.href = url;
 });
 
 resizeBtn.addEventListener('click', e=> {
     let src = cv.imread(srcImg);
     let dst = new cv.Mat();
+    //specifying the size of the image here, dimension is 300X300
     let dsize = new cv.Size(300, 300);
     // You can try more different parameters
     cv.resize(src, dst, dsize, 0, 0, cv.INTER_AREA);
     cv.imshow('canvas', dst);
     src.delete(); dst.delete();
+});
+
+// to download the resized/converted image
+downloadBtn.addEventListener('click', e => {
+    const data = canvas.toDataURL();
+    const url = URL.createObjectURL(dataUriToBlob(data));
+    downloadBtn.href = url;
 });

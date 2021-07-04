@@ -1,6 +1,6 @@
 const srcImg = document.getElementById('src-image');
 const fileInput = document.getElementById('input-file');
-const canvas = document.getElementById('dest-canvas');
+const canvas = document.getElementById('canvas');
 const grayScaleBtn = document.getElementById('gray-scale-btn');
 const lineDrawBtn = document.getElementById('linedraw-btn');
 const downloadBtn = document.getElementById('download-btn');
@@ -37,13 +37,13 @@ function dataUriToBlob(dataUri) {
 
 fileInput.addEventListener('change', e => {
     srcImg.src = URL.createObjectURL(e.target.files[0]);
-    hiddenImg.src = URL.createObjectURL(e.target.files[0]);
+    
 }, false);
 
 grayScaleBtn.addEventListener('click', e => {
     let src = cv.imread(srcImg);
     const dst = convertImageToGray(src);
-    cv.imshow('dest-canvas', dst);
+    cv.imshow('canvas', dst);
     src.delete();
     dst.delete();
 });
@@ -51,7 +51,7 @@ grayScaleBtn.addEventListener('click', e => {
 lineDrawBtn.addEventListener('click', e => {
     const src = cv.imread(srcImg);
     const dst = convertImageToLineDrawing(src);
-    cv.imshow('dest-canvas', dst);
+    cv.imshow('canvas', dst);
     src.delete();
     dst.delete();
 });
@@ -68,6 +68,6 @@ resizeBtn.addEventListener('click', e=> {
     let dsize = new cv.Size(300, 300);
     // You can try more different parameters
     cv.resize(src, dst, dsize, 0, 0, cv.INTER_AREA);
-    cv.imshow('dest-canvas', dst);
+    cv.imshow('canvas', dst);
     src.delete(); dst.delete();
 });

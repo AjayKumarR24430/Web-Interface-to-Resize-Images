@@ -1,8 +1,6 @@
 const srcImg = document.getElementById('src-image');
-const hiddenImg = document.getElementById('hidden-image');
 const fileInput = document.getElementById('input-file');
 const canvas = document.getElementById('dest-canvas');
-const hiddenCanvas = document.getElementById('hidden-canvas');
 const grayScaleBtn = document.getElementById('gray-scale-btn');
 const lineDrawBtn = document.getElementById('linedraw-btn');
 const downloadBtn = document.getElementById('download-btn');
@@ -48,12 +46,6 @@ grayScaleBtn.addEventListener('click', e => {
     cv.imshow('dest-canvas', dst);
     src.delete();
     dst.delete();
-
-    let hiddenSrc = cv.imread(hiddenImg);
-    const hiddenDst = convertImageToGray(hiddenSrc);
-    cv.imshow('hidden-canvas', hiddenDst);
-    hiddenSrc.delete();
-    hiddenDst.delete();
 });
 
 lineDrawBtn.addEventListener('click', e => {
@@ -62,16 +54,20 @@ lineDrawBtn.addEventListener('click', e => {
     cv.imshow('dest-canvas', dst);
     src.delete();
     dst.delete();
-
-    const hiddenSrc = cv.imread(hiddenImg);
-    const hiddenDst = convertImageToLineDrawing(hiddenSrc);
-    cv.imshow('hidden-canvas', hiddenDst);
-    hiddenSrc.delete();
-    hiddenDst.delete();
 });
 
 downloadBtn.addEventListener('click', e => {
-    const data = hiddenCanvas.toDataURL();
+    const data = canvas.toDataURL();
     const url = URL.createObjectURL(dataUriToBlob(data));
     downloadBtn.href = url;
+});
+
+resizeBtn.addEventListener('click', e=> {
+    let src = cv.imread(srcImg);
+    let dst = new cv.Mat();
+    let dsize = new cv.Size(300, 300);
+    // You can try more different parameters
+    cv.resize(src, dst, dsize, 0, 0, cv.INTER_AREA);
+    cv.imshow('dest-canvas', dst);
+    src.delete(); dst.delete();
 });

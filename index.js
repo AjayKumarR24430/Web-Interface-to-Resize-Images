@@ -5,6 +5,7 @@ const grayScaleBtn = document.getElementById('gray-scale-btn');
 const lineDrawBtn = document.getElementById('linedraw-btn');
 const downloadBtn = document.getElementById('download-btn');
 const resizeBtn = document.getElementById('resize-btn');
+const cropBtn = document.getElementById('crop-btn');
 
 // function to convert the image to gray scale
 function convertImageToGray(img) {
@@ -72,6 +73,17 @@ resizeBtn.addEventListener('click', e=> {
     cv.resize(src, dst, dsize, 0, 0, cv.INTER_AREA);
     cv.imshow('canvas', dst);
     src.delete(); dst.delete();
+});
+
+cropBtn.addEventListener('click', e=> {
+    let src = cv.imread(srcImg);
+    let dst = new cv.Mat();
+    // You can try more different parameters
+    let rect = new cv.Rect(250, 250, 250, 250);
+    dst = src.roi(rect);
+    cv.imshow('canvas', dst);
+    src.delete();
+    dst.delete();
 });
 
 // to download the resized/converted image

@@ -1,0 +1,85 @@
+<html>
+    <head>
+    <style>
+    #preview {
+    background: red;
+    border: 1px solid green;
+    }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/js/jquery.Jcrop.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/css/jquery.Jcrop.css" type="text/css" />
+
+    <script type="text/javascript">
+         $(document).delegate(':file', 'change', function() {
+            picture(this);
+            console.log('running');
+        });
+
+        var picture_width;
+        var picture_height;
+        var crop_max_width = 400;
+        var crop_max_height = 400;
+        function picture(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#jcrop, #preview").html("").append("<img src=\""+e.target.result+"\" alt=\"\" />");
+                    picture_width = $("#preview img").width();
+                    picture_height = $("#preview img").height();
+                    $("#jcrop  img").Jcrop({
+                        onChange: canvas,
+                        onSelect: canvas,
+                        boxWidth: crop_max_width,
+                        boxHeight: crop_max_height
+                    });
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function canvas(coords){
+            var imageObj = $("#jcrop img")[0];
+            var canvas = $("#canvas")[0];
+            canvas.width  = coords.w;
+            canvas.height = coords.h;
+            var context = canvas.getContext("2d");
+            context.drawImage(imageObj, coords.x, coords.y, coords.w, coords.h, 0, 0, canvas.width, canvas.height);
+            png();
+        }
+        function png() {
+            var png = $("#canvas")[0].toDataURL('image/png');
+            $("#png").val(png);
+            var download = document.getElementById('download')
+            download.addEventListener('click', e => {
+                download.href = png;
+            });
+        }
+    </script>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th style="width: 600px"><h2>Select Image file to manually Crop</h2></th>
+                <th><h2>Preview of Cropped Image</h2></th>
+            </tr>
+            <tr>
+                <td>
+                    <input id="file" type="file" />
+                    <h2>Uploaded Image</h2>
+                    <div id="jcrop"></div>
+                </td>
+                <td>
+                    <canvas id="canvas" style="width: 500px; height: 400px; border:1px solid #000000;"></canvas>
+                    <input id="png" type="hidden" />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <a href="#" id="download" download="croppedImage.png">Download Cropped Image</a>
+                </td>
+            </tr>
+            
+        </table>
+    </body>
+</html>

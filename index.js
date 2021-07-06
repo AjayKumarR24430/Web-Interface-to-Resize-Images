@@ -1,13 +1,9 @@
 const srcImg = document.getElementById('src-image');
-const cropImg = document.getElementById('crop-image');
 const fileInput = document.getElementById('input-file');
-const cropInput = document.getElementById('file');
 const canvas = document.getElementById('canvas');
-const canvas1 = document.getElementById('canvas1');
 const grayScaleBtn = document.getElementById('gray-scale-btn');
 const lineDrawBtn = document.getElementById('linedraw-btn');
 const downloadBtn = document.getElementById('download-btn');
-const downloadBtn1 = document.getElementById('download-btn1');
 const resizeBtn = document.getElementById('resize-btn');
 const cropBtn = document.getElementById('crop-btn');
 
@@ -48,10 +44,6 @@ fileInput.addEventListener('change', e => {
     srcImg.src = URL.createObjectURL(e.target.files[0]);    
 }, false);
 
-cropInput.addEventListener('change', e => {
-    // setting the src of the image from the Input file
-    cropImg.src = URL.createObjectURL(e.target.files[0]);    
-}, false);
 
 // onclicking gray scale button, conversion takes place convertImageToGray function is called
 grayScaleBtn.addEventListener('click', e => {
@@ -102,10 +94,3 @@ downloadBtn.addEventListener('click', e => {
     downloadBtn.href = url;
 });
 
-// to download the cropped image
-downloadBtn1.addEventListener('click', e => {
-    const data = canvas1.toDataURL();
-    const url = URL.createObjectURL(dataUriToBlob(data));
-    console.log(url)
-    downloadBtn1.href = url;
-});

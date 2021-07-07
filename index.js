@@ -80,11 +80,18 @@ cropBtn.addEventListener('click', e=> {
     let src = cv.imread(srcImg);
     let dst = new cv.Mat();
     // You can try more different parameters
-    let rect = new cv.Rect(250, 250, 250, 250);
+    // let rect = new cv.Rect(250, 250, 250, 250);
+    // dst = src.roi(rect);
+    let ksize = new cv.Size(5, 5);
+    cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);		
+    cv.Canny(dst, dst, 75, 200, 3, false);
+    cv.threshold(dst, dst, 80, 255, cv.THRESH_BINARY_INV);
+    let rect = new cv.Rect(100, 100, 200, 200);
     dst = src.roi(rect);
     cv.imshow('canvas', dst);
     src.delete();
     dst.delete();
+			
 });
 
 // to download the resized/converted image
@@ -93,4 +100,3 @@ downloadBtn.addEventListener('click', e => {
     const url = URL.createObjectURL(dataUriToBlob(data));
     downloadBtn.href = url;
 });
-

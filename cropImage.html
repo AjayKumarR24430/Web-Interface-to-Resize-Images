@@ -10,11 +10,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/js/jquery.Jcrop.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.15/css/jquery.Jcrop.css" type="text/css" />
 
-    <script type="text/javascript">
+    <script>
+        // var user_width;
+        // function setWidth(){
+        //     user_width = $("#myInput").val();
+        //     console.log(user_width)
+        // }
+        // console.log(user_width)
          $(document).delegate(':file', 'change', function() {
             picture(this);
             console.log('running');
-        });
+        });           
 
         var picture_width;
         var picture_height;
@@ -24,7 +30,7 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $("#jcrop, #preview").html("").append("<img src=\""+e.target.result+"\" alt=\"\" />");
+                    $("#jcrop, #preview").html("").append("<img src=\""+e.target.result+"\" alt=\"\"  />");
                     picture_width = $("#preview img").width();
                     picture_height = $("#preview img").height();
                     $("#jcrop  img").Jcrop({
@@ -38,10 +44,24 @@
             }
         }
         function canvas(coords){
+            // getting user values
+            var user_width = $("#myInput").val();
+            var user_height = $("#myInput1").val();
             var imageObj = $("#jcrop img")[0];
             var canvas = $("#canvas")[0];
-            canvas.width  = coords.w;
-            canvas.height = coords.h;
+            //if user value is empty
+            if(user_width== ""){
+                canvas.width  = coords.w;
+            }
+            else{
+                canvas.width = user_width;
+            }
+            if(user_height == ""){
+                canvas.height = coords.h;
+            }
+            //assigning to the image width and height
+            else{
+            canvas.height = user_height;}
             var context = canvas.getContext("2d");
             context.drawImage(imageObj, coords.x, coords.y, coords.w, coords.h, 0, 0, canvas.width, canvas.height);
             png();
@@ -58,7 +78,22 @@
     </head>
     <body>
         <a href='./Main.html'>Go back</a>
+        <br>
+
         <table>
+            <tr>
+                <th>
+                Enter the width of image: 
+                <input id="myInput" type="number" name="userwidth"/>
+                <!-- <button type="button" id="myBtn" onclick="setWidth()">Set value </button> -->
+                </th>
+            </tr>
+            <tr>
+                <th>
+                 Enter the height of image: 
+                <input id="myInput1" type="number" name="userheight"/>
+                </th>
+            </tr>
             <tr>
                 <th style="width: 600px"><h2>Select Image file to manually Crop</h2></th>
                 <th><h2>Preview of Cropped Image</h2></th>
